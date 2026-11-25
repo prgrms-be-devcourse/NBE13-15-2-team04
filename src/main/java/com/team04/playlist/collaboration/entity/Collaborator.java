@@ -1,10 +1,14 @@
 package com.team04.playlist.collaboration.entity;
 
+import com.team04.playlist.playlist.entity.Playlist;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
@@ -26,9 +30,11 @@ public class Collaborator {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "playlist_id", nullable = false)
-    private Long playlistId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "playlist_id", nullable = false)
+    private Playlist playlist;
 
+    //TODO: 추후에 ManyToOne 수정해야함(User엔티티 필요)
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
@@ -39,9 +45,9 @@ public class Collaborator {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    public static Collaborator create(Long playlistId, Long userId, Long invitedBy) {
+    public static Collaborator create(Playlist playlist, Long userId, Long invitedBy) {
         Collaborator collaborator = new Collaborator();
-        collaborator.playlistId = playlistId;
+        collaborator.playlist = playlist;
         collaborator.userId = userId;
         collaborator.invitedBy = invitedBy;
         return collaborator;
