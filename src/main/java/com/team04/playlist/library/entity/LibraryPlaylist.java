@@ -35,11 +35,12 @@ public class LibraryPlaylist {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    public LibraryPlaylist(Long libraryId, Long playlistId){
+    private LibraryPlaylist(Long libraryId, Long playlistId) {
         this.libraryId = libraryId;
         this.playlistId = playlistId;
     }
 
-
-
+    public static LibraryPlaylist of(Long libraryId, Long playlistId) {
+        return new LibraryPlaylist(libraryId, playlistId);
+    }
 }
