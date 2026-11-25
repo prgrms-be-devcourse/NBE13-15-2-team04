@@ -26,7 +26,8 @@ public class PlaylistTrack {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 플레이리스트 id (다른 도메인이라 id로만 참조)
+    // 플레이리스트 id
+    //TODO: Playlist 엔티티 main 머지 후 ManyToOne으로 수정
     @Column(nullable = false)
     private Long playlistId;
 
@@ -39,6 +40,7 @@ public class PlaylistTrack {
     private String position;
 
     // 곡을 추가한 사용자 id
+    //TODO: User 엔티티 main 머지 후 ManyToOne으로 수정
     @Column(nullable = false)
     private Long addedBy;
 
