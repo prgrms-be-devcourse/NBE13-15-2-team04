@@ -42,10 +42,15 @@ public class Library{
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    //기본 보관함은 사용자당 하나. 멋대로 여러개 생성하면 안된다
     private Library(Long userId, String name, boolean isDefault) {
         this.userId = userId;
         this.name = name;
         this.isDefault = isDefault;
+    }
+
+    public static Library of(Long userId, String name) {
+        return new Library(userId, name, false);
     }
 
     //최초 로그인 때, 기본 보관함 생성
