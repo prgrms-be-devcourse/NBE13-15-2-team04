@@ -35,12 +35,12 @@ public class JwtProvider {
         this.refreshSeconds = refreshSeconds;
     }
 
-    public String createAccess(String loginId) {
-        return compact(loginId, TYPE_ACCESS, this.accessSeconds);
+    public String createAccess(String userId) {
+        return compact(userId, TYPE_ACCESS, this.accessSeconds);
     }
 
-    public String createRefresh(String loginId) {
-        return compact(loginId, TYPE_REFRESH, this.refreshSeconds);
+    public String createRefresh(String userId) {
+        return compact(userId, TYPE_REFRESH, this.refreshSeconds);
     }
 
     public Claims parseAccess(String token) {
