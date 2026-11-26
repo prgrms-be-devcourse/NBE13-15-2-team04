@@ -25,8 +25,9 @@ public class LibraryPlaylist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "library_id", nullable = false)
-    private Long libraryId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "library_id", nullable = false)
+    private Library library;
 
     @Column(name = "playlist_id", nullable = false)
     private Long playlistId;
@@ -35,12 +36,12 @@ public class LibraryPlaylist {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    private LibraryPlaylist(Long libraryId, Long playlistId) {
-        this.libraryId = libraryId;
+    private LibraryPlaylist(Library library, Long playlistId) {
+        this.library = library;
         this.playlistId = playlistId;
     }
 
-    public static LibraryPlaylist of(Long libraryId, Long playlistId) {
-        return new LibraryPlaylist(libraryId, playlistId);
+    public static LibraryPlaylist of(Library library, Long playlistId) {
+        return new LibraryPlaylist(library, playlistId);
     }
 }
