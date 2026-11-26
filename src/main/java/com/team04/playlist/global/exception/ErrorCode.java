@@ -32,6 +32,10 @@ public enum ErrorCode {
     TRACK_NOT_IN_PLAYLIST(HttpStatus.NOT_FOUND, "플레이리스트에 담기지 않은 곡입니다."),
     COLLABORATOR_NOT_FOUND(HttpStatus.NOT_FOUND, "편집자를 찾을 수 없습니다."),
     LIBRARY_NOT_FOUND(HttpStatus.NOT_FOUND, "보관함을 찾을 수 없습니다."),
+    API_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 API입니다."),
+
+    // 405 METHOD_NOT_ALLOWED
+    METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "지원하지 않는 HTTP 메서드입니다."),
 
     // 409 CONFLICT
     TRACK_ALREADY_IN_PLAYLIST(HttpStatus.CONFLICT, "이미 플레이리스트에 담긴 곡입니다."),
