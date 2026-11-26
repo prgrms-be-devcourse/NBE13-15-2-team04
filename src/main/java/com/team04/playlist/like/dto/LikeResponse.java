@@ -2,7 +2,6 @@ package com.team04.playlist.like.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-//좋아요 등록(PUT) 응답. 취소(DELETE)는 204 No Content 라 응답 본문이 없다.
 @Schema(description = "좋아요 등록 응답")
 public record LikeResponse(
 
