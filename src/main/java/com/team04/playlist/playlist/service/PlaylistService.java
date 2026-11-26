@@ -2,8 +2,8 @@ package com.team04.playlist.playlist.service;
 
 import com.team04.playlist.global.exception.BusinessException;
 import com.team04.playlist.global.exception.ErrorCode;
+import com.team04.playlist.global.response.PageResponse;
 import com.team04.playlist.playlist.dto.PlaylistCreateRequest;
-import com.team04.playlist.playlist.dto.PlaylistPageResponse;
 import com.team04.playlist.playlist.dto.PlaylistResponse;
 import com.team04.playlist.playlist.dto.PlaylistSort;
 import com.team04.playlist.playlist.dto.PlaylistSummaryResponse;
@@ -60,9 +60,9 @@ public class PlaylistService {
 
     // 플리 목록
     @Transactional(readOnly = true)
-    public PlaylistPageResponse getPublicPlaylists(PlaylistSort sort, int page, int size) {
+    public PageResponse<PlaylistSummaryResponse> getPublicPlaylists(PlaylistSort sort, int page, int size) {
         PageRequest pageRequest = PageRequest.of(Math.max(page, 0), Math.clamp(size, 1, MAX_PAGE_SIZE), sort.toSort());
-        return PlaylistPageResponse.from(playlistRepository.findByIsPublicTrueAndDeletedAtIsNull(pageRequest)
+        return PageResponse.from(playlistRepository.findByIsPublicTrueAndDeletedAtIsNull(pageRequest)
                         .map(PlaylistSummaryResponse::from));
     }
 

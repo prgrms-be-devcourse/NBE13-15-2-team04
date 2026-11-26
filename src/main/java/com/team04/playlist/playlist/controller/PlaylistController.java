@@ -1,10 +1,10 @@
 package com.team04.playlist.playlist.controller;
 
+import com.team04.playlist.global.response.PageResponse;
 import com.team04.playlist.playlist.dto.PlaylistCreateRequest;
-import com.team04.playlist.playlist.dto.PlaylistPageResponse;
 import com.team04.playlist.playlist.dto.PlaylistResponse;
 import com.team04.playlist.playlist.dto.PlaylistSort;
-import com.team04.playlist.playlist.dto.PlaylistSuccessResponse;
+import com.team04.playlist.playlist.dto.PlaylistSummaryResponse;
 import com.team04.playlist.playlist.dto.PlaylistUpdateRequest;
 import com.team04.playlist.playlist.service.PlaylistService;
 import jakarta.validation.Valid;
@@ -33,30 +33,29 @@ public class PlaylistController {
     private final PlaylistService playlistService;
 
     @PostMapping
-    public ResponseEntity<PlaylistSuccessResponse<PlaylistResponse>> create(
+    public ResponseEntity<PlaylistResponse> create(
             @RequestHeader(value = USER_ID_HEADER, required = false) Long userId,
             @Valid @RequestBody PlaylistCreateRequest request) {
         PlaylistResponse response = playlistService.create(userId, request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(PlaylistSuccessResponse.created("플레이리스트를 생성했습니다.", response));
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
-    public PlaylistSuccessResponse<PlaylistPageResponse> getPublicPlaylists(
+    public ResponseEntity<PageResponse<PlaylistSummaryResponse>> getPublicPlaylists(
             @RequestParam(defaultValue = "latest") String sort,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        PlaylistPageResponse response = playlistService.getPublicPlaylists(PlaylistSort.from(sort), page, size);
-        return PlaylistSuccessResponse.ok("플레이리스트 목록을 조회했습니다.", response);
+        PageResponse<PlaylistSummaryResponse> response = playlistService.getPublicPlaylists(PlaylistSort.from(sort), page, size);
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{playlistId}")
-    public PlaylistSuccessResponse<PlaylistResponse> update(
+    public ResponseEntity<PlaylistResponse> update(
             @PathVariable Long playlistId,
             @RequestHeader(value = USER_ID_HEADER, required = false) Long userId,
             @Valid @RequestBody PlaylistUpdateRequest request) {
         PlaylistResponse response = playlistService.update(playlistId, userId, request);
-        return PlaylistSuccessResponse.ok("플레이리스트를 수정했습니다.", response);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{playlistId}")
