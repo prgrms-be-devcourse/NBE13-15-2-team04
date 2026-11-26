@@ -1,6 +1,7 @@
 package com.team04.playlist.collaboration.entity;
 
 import com.team04.playlist.playlist.entity.Playlist;
+import com.team04.playlist.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,21 +35,22 @@ public class Collaborator {
     @JoinColumn(name = "playlist_id", nullable = false)
     private Playlist playlist;
 
-    //TODO: 추후에 ManyToOne 수정해야함(User엔티티 필요)
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(name = "invited_by", nullable = false)
-    private Long invitedBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "invited_by", nullable = false)
+    private User invitedBy;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    public static Collaborator create(Playlist playlist, Long userId, Long invitedBy) {
+    public static Collaborator create(Playlist playlist, User user, User invitedBy) {
         Collaborator collaborator = new Collaborator();
         collaborator.playlist = playlist;
-        collaborator.userId = userId;
+        collaborator.user = user;
         collaborator.invitedBy = invitedBy;
         return collaborator;
     }
