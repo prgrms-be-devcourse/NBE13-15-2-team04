@@ -40,7 +40,8 @@ public class Playlist {
     @Column(name = "is_public", nullable = false)
     private boolean isPublic;
 
-    @Column(name = "like_count", nullable = false)
+    // PlaylistLikeCounter로만 바꿈.
+    @Column(name = "like_count", nullable = false, updatable = false)
     private int likeCount;
 
     @Column(name = "source_playlist_id")
