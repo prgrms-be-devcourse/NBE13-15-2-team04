@@ -1,0 +1,33 @@
+# 테스트 전용 설정 (build.gradle에서 test 프로필을 자동으로 활성화)
+spring:
+  datasource:
+    # 테스트 컨텍스트마다 별도의 메모리 DB를 쓰도록 이름에 랜덤 값을 붙인다.
+    # (같은 이름을 쓰면 두 번째 컨텍스트에서 schema.sql 실행 시 "table already exists" 발생)
+    url: jdbc:h2:mem:playlist-${random.uuid};MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  # 운영 DB와 같은 DDL(schema.sql)로 테이블 생성 → FK, 기본값, 인덱스까지 동일하게 적용
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:sql/schema.sql
+
+  jpa:
+    hibernate:
+      # 테이블은 만들지 않고, 엔티티가 schema.sql과 일치하는지만 검사
+      ddl-auto: validate
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: test-client-id
+            client-secret: test-client-secret
+
+playlist:
+  jwt:
+    # .env 값과 무관하게 테스트에서 항상 같은 키를 쓰도록 고정
+    secret: test-only-jwt-secret-key-for-unit-and-integration-tests
