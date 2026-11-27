@@ -47,7 +47,7 @@ public class PlaylistAccessChecker {
         return playlist;
     }
 
-    // 관리 권환 조회, X -> 403
+    // 관리 권한 조회, X -> 403
     public Playlist getOwned(Long playlistId, Long userId) {
         requireLogin(userId);
         Playlist playlist = findActive(playlistId);

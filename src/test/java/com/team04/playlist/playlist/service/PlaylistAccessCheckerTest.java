@@ -11,6 +11,8 @@ import com.team04.playlist.global.exception.ErrorCode;
 import com.team04.playlist.playlist.entity.Playlist;
 import com.team04.playlist.playlist.entity.PlaylistRole;
 import com.team04.playlist.playlist.repository.PlaylistRepository;
+import com.team04.playlist.user.entity.Provider;
+import com.team04.playlist.user.entity.User;
 import java.util.Optional;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.DisplayName;
@@ -152,7 +154,9 @@ class PlaylistAccessCheckerTest {
 
     // OWNER_ID가 만든 플레이리스트. id는 DB가 채우는 값이라 테스트에서는 직접 넣는다
     private Playlist newPlaylist(boolean isPublic) {
-        Playlist playlist = Playlist.create(OWNER_ID, "제목", null, isPublic);
+        User owner = User.builder().provider(Provider.KAKAO).providerId("1").nickname("user1").build();
+        ReflectionTestUtils.setField(owner, "id", OWNER_ID);
+        Playlist playlist = Playlist.create(owner, "제목", null, isPublic);
         ReflectionTestUtils.setField(playlist, "id", PLAYLIST_ID);
         return playlist;
     }
