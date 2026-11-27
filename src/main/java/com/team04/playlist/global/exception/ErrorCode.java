@@ -18,12 +18,14 @@ public enum ErrorCode {
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "액세스 토큰이 만료되었습니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 리프레시 토큰입니다."),
+    OAUTH_LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "소셜 로그인에 실패했습니다."),
 
     // 403 FORBIDDEN
     PRIVATE_PLAYLIST(HttpStatus.FORBIDDEN, "비공개 플레이리스트입니다."),
     NOT_PLAYLIST_OWNER(HttpStatus.FORBIDDEN, "플레이리스트 소유자만 가능한 작업입니다."),
     NOT_PLAYLIST_EDITOR(HttpStatus.FORBIDDEN, "플레이리스트를 편집할 권한이 없습니다."),
     NOT_LIBRARY_OWNER(HttpStatus.FORBIDDEN, "보관함에 접근할 권한이 없습니다."),
+    INVALID_ORIGIN(HttpStatus.FORBIDDEN, "허용되지 않은 요청 출처입니다."),
 
     // 404 NOT_FOUND
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
@@ -32,6 +34,10 @@ public enum ErrorCode {
     TRACK_NOT_IN_PLAYLIST(HttpStatus.NOT_FOUND, "플레이리스트에 담기지 않은 곡입니다."),
     COLLABORATOR_NOT_FOUND(HttpStatus.NOT_FOUND, "편집자를 찾을 수 없습니다."),
     LIBRARY_NOT_FOUND(HttpStatus.NOT_FOUND, "보관함을 찾을 수 없습니다."),
+    API_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 API입니다."),
+
+    // 405 METHOD_NOT_ALLOWED
+    METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "지원하지 않는 HTTP 메서드입니다."),
 
     // 409 CONFLICT
     TRACK_ALREADY_IN_PLAYLIST(HttpStatus.CONFLICT, "이미 플레이리스트에 담긴 곡입니다."),
