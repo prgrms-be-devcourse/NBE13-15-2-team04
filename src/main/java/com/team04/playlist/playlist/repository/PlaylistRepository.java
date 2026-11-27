@@ -20,12 +20,13 @@ public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
     Page<Playlist> findByIsPublicTrueAndDeletedAtIsNull(Pageable pageable);
 
     @Modifying
-    @Query("update Playlist p set p.likeCount = p.likeCount + 1 where p.id = :id and p.deletedAt is null")
+    @Query("update Playlist p set p.likeCount = p.likeCount + 1, p.updatedAt = p.updatedAt "
+            + "where p.id = :id and p.deletedAt is null")
     void increaseLikeCount(@Param("id") Long id);
 
     @Modifying
-    @Query("update Playlist p set p.likeCount = p.likeCount - 1 "
-            + "where p.id = :id and p.deletedAt is null and p.likeCount > 0")
+    @Query("update Playlist p set p.likeCount = p.likeCount - 1, p.updatedAt = p.updatedAt "
+            + "where p.id = :id and p.likeCount > 0")
     void decreaseLikeCount(@Param("id") Long id);
 
     @Query("select p.likeCount from Playlist p where p.id = :id and p.deletedAt is null")
