@@ -29,12 +29,16 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.13.0'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.13.0'
 
+    //OAuth2
+    implementation 'org.springframework.boot:spring-boot-starter-security-oauth2-client'
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testRuntimeOnly 'com.h2database:h2'
     testCompileOnly 'org.projectlombok:lombok'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testAnnotationProcessor 'org.projectlombok:lombok'
@@ -42,4 +46,6 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    // 테스트는 항상 test 프로필(H2 DB, 테스트용 키)로 실행
+    systemProperty 'spring.profiles.active', 'test'
 }

@@ -22,6 +22,9 @@ import java.time.LocalDateTime;
 )
 public class User {
 
+    public static final int NICKNAME_MAX_LENGTH = 20;
+    public static final String DEFAULT_NICKNAME = "user";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,7 +36,7 @@ public class User {
     @Column(name = "provider_id", nullable = false, length = 100)
     private String providerId;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = NICKNAME_MAX_LENGTH)
     private String nickname;
 
     @Column(length = 255)

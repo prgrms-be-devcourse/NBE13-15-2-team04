@@ -38,9 +38,10 @@ public class SecurityConfig {
                         .requestMatchers("/error", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // 인증: 소셜 로그인 시작/콜백, 토큰 재발급
+                        // 인증: 소셜 로그인 시작/콜백, 토큰 재발급, 로그아웃
+                        // 재발급·로그아웃은 액세스 토큰 대신 리프레시 쿠키로 처리한다. (액세스 토큰이 만료돼도 로그아웃 가능)
                         .requestMatchers("/oauth2/authorization/**", "/login/oauth2/code/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/reissue").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/reissue", "/api/v1/auth/logout").permitAll()
 
                         // 플레이리스트 조회: 로그인 없이 접근 가능
                         // 비공개 플레이리스트 접근 제한(PRIVATE_PLAYLIST)은 서비스에서 판단한다.
