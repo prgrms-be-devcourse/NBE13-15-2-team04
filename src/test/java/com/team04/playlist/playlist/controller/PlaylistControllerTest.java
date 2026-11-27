@@ -22,14 +22,19 @@ import com.team04.playlist.playlist.dto.PlaylistSummaryResponse;
 import com.team04.playlist.playlist.service.PlaylistService;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 
 @WebMvcTest(PlaylistController.class)
@@ -44,6 +49,11 @@ class PlaylistControllerTest {
     @MockitoBean
     private PlaylistService playlistService;
 
+    @AfterEach
+    void logout() {
+        SecurityContextHolder.clearContext();
+    }
+
     @Test
     @DisplayName("생성: 201, 플레이리스트 정보를 바로 응답")
     void create() throws Exception {
@@ -51,7 +61,7 @@ class PlaylistControllerTest {
                 .willReturn(new PlaylistResponse(10L, 1L, "user1", "제목", null, false, 0, CREATED_AT));
 
         mockMvc.perform(post("/api/v1/playlists")
-                        .header("X-User-Id", 1L)
+                        .with(loginUser(1L))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {"title": "제목", "isPublic": false}
@@ -67,7 +77,7 @@ class PlaylistControllerTest {
     @DisplayName("생성: 빈 제목 → 400 INVALID_INPUT")
     void createWithBlankTitle() throws Exception {
         mockMvc.perform(post("/api/v1/playlists")
-                        .header("X-User-Id", 1L)
+                        .with(loginUser(1L))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {"title": "  "}
@@ -82,7 +92,7 @@ class PlaylistControllerTest {
     @DisplayName("생성: 제목 31자 → 400 INVALID_INPUT")
     void createWithTooLongTitle() throws Exception {
         mockMvc.perform(post("/api/v1/playlists")
-                        .header("X-User-Id", 1L)
+                        .with(loginUser(1L))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"title\":\"" + "가".repeat(31) + "\"}"))
                 .andExpect(status().isBadRequest())
@@ -96,7 +106,7 @@ class PlaylistControllerTest {
                 .willThrow(new BusinessException(ErrorCode.NOT_PLAYLIST_OWNER));
 
         mockMvc.perform(patch("/api/v1/playlists/10")
-                        .header("X-User-Id", 2L)
+                        .with(loginUser(2L))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {"title": "수정된 제목"}
@@ -110,7 +120,7 @@ class PlaylistControllerTest {
     @Test
     @DisplayName("삭제: 204, 본문 없음")
     void deletePlaylist() throws Exception {
-        mockMvc.perform(delete("/api/v1/playlists/10").header("X-User-Id", 1L))
+        mockMvc.perform(delete("/api/v1/playlists/10").with(loginUser(1L)))
                 .andExpect(status().isNoContent());
 
         verify(playlistService).delete(10L, 1L);
@@ -121,7 +131,7 @@ class PlaylistControllerTest {
     void deleteNotFound() throws Exception {
         willThrow(new BusinessException(ErrorCode.PLAYLIST_NOT_FOUND)).given(playlistService).delete(10L, 1L);
 
-        mockMvc.perform(delete("/api/v1/playlists/10").header("X-User-Id", 1L))
+        mockMvc.perform(delete("/api/v1/playlists/10").with(loginUser(1L)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code").value("PLAYLIST_NOT_FOUND"));
     }
@@ -148,5 +158,14 @@ class PlaylistControllerTest {
         mockMvc.perform(get("/api/v1/playlists").param("sort", "abc"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("INVALID_INPUT"));
+    }
+
+    // 필터를 끈 테스트라 JWT 필터 대신 사용자 id(문자열)를 로그인 정보로 직접 넣는다
+    private static RequestPostProcessor loginUser(Long userId) {
+        return request -> {
+            SecurityContextHolder.getContext().setAuthentication(UsernamePasswordAuthenticationToken.authenticated(
+                    String.valueOf(userId), null, List.of(new SimpleGrantedAuthority("ROLE_USER"))));
+            return request;
+        };
     }
 }
