@@ -20,10 +20,9 @@ public class PlaylistLikeCounter {
         return currentLikeCount(playlistId);
     }
 
-    // -1 후 좋아요 수 반환
-    public int decreaseLikeCount(Long playlistId) {
+    // -1 (삭제된 플리도 404 없이 처리)
+    public void decreaseLikeCount(Long playlistId) {
         playlistRepository.decreaseLikeCount(playlistId);
-        return currentLikeCount(playlistId);
     }
 
     // 플리 없거나 삭제됨 -> 404
